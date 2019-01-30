@@ -8,43 +8,32 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {Platform, StyleSheet, Text, View, Image, Dimensions, FlatList} from 'react-native';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+const width = Dimensions.get('screen').width;
 
 type Props = {};
 export default class App extends Component<Props> {
   render() {
+
+    const events = [
+        {id: 1, title: 'Sample Event'},
+        {id: 2, title: 'My Awesome Event'},
+        {id: 3, title: 'Another Concert'}
+    ];
+
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to PurAí!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
+        <FlatList style={{marginTop: 20, backgroundColor: '#fff'}}
+            keyExtractor={item => item.id}
+            data={events}
+            renderItem={ ({item}) =>
+                <View key={item.id}>
+                    <Text>{item.title}</Text>
+                    <Image source={require('./resources/img/sample-event.jpg')}
+                            style={{width: width, height: width}}/>
+                </View>
+            }
+        />
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
