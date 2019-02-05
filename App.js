@@ -1,39 +1,41 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- * @lint-ignore-every XPLATJSCOPYRIGHT1
- */
-
-import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Image, Dimensions, FlatList} from 'react-native';
-
-const width = Dimensions.get('screen').width;
+import React, { Component } from 'react';
+import { Platform, StyleSheet, FlatList } from 'react-native';
+import Event from './src/components/Event';
 
 type Props = {};
 export default class App extends Component<Props> {
-  render() {
 
-    const events = [
-        {id: 1, title: 'Sample Event'},
-        {id: 2, title: 'My Awesome Event'},
-        {id: 3, title: 'Another Concert'}
-    ];
+    constructor() {
+        super();
+        this.state = {
+            events: []
+        };
+    }
 
-    return (
-        <FlatList style={{marginTop: 20, backgroundColor: '#fff'}}
-            keyExtractor={item => item.id}
-            data={events}
-            renderItem={ ({item}) =>
-                <View key={item.id}>
-                    <Text>{item.title}</Text>
-                    <Image source={require('./resources/img/sample-event.jpg')}
-                            style={{width: width, height: width}}/>
-                </View>
-            }
-        />
-    );
-  }
+    componentDidMount() {
+        fetch('https://api.myjson.com/bins/12fzng')
+            .then(res => res.json())
+            .then(json => this.setState({ events: json }));
+    }
+
+    render() {
+        return (
+            <FlatList 
+                style={styles.container}
+                keyExtractor={item => item.title}
+                data={this.state.events}
+                renderItem={({ item }) =>
+                    <Event event={item} />
+                }
+            />
+        );
+    }
 }
+
+const statusBar = Platform.OS === 'ios' ? 20 : 0;
+const styles = StyleSheet.create({
+    container: {
+        marginTop: statusBar,
+        backgroundColor: 'rgb(11, 11, 11)'
+    }
+});
